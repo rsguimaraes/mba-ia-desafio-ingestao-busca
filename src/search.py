@@ -5,7 +5,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 PROMPT_TEMPLATE = """
 CONTEXTO:
-Os dados a seguir representam uma lista contendo as informações do nome da empresa, faturamento e ano fundação da empresa. Use essas informações para responder à pergunta do usuario. Se a resposta não puder ser encontrada no contexto, responda que não tem informações suficientes para responder à pergunta.
+Os dados a seguir representam uma lista contendo as informações do nome da empresa, faturamento e ano fundação da empresa.
 {contexto}
 
 REGRAS:

@@ -112,6 +112,8 @@ Digite sua pergunta quando solicitado. Para cada pergunta o sistema:
 2. Monta o contexto e envia ao LLM Gemini com um prompt restritivo
 3. Exibe a resposta gerada com base exclusivamente no conteúdo do PDF
 
+> **Nota sobre o prompt:** o template de prompt inclui uma linha de descrição do conteúdo antes dos chunks recuperados (ex: *"Os dados a seguir representam uma lista contendo as informações do nome da empresa, faturamento e ano fundação da empresa."*). Esse texto foi adicionado porque os chunks isolados podem não deixar claro para o LLM o que os dados representam — o PDF pode conter tabelas ou listas sem um cabeçalho semântico suficiente para o modelo inferir o domínio. A descrição explícita garante que o LLM interprete corretamente o contexto antes de responder.
+
 Para encerrar, digite `SAIR`.
 
 ## Observações técnicas
