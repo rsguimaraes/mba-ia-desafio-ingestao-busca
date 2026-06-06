@@ -1,5 +1,11 @@
+import os
+from langchain_core.prompts import PromptTemplate
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.output_parsers import StrOutputParser
+
 PROMPT_TEMPLATE = """
 CONTEXTO:
+Os dados a seguir representam uma lista contendo as informações do nome da empresa, faturamento e ano fundação da empresa. Use essas informações para responder à pergunta do usuario. Se a resposta não puder ser encontrada no contexto, responda que não tem informações suficientes para responder à pergunta.
 {contexto}
 
 REGRAS:
@@ -25,5 +31,8 @@ PERGUNTA DO USUÁRIO:
 RESPONDA A "PERGUNTA DO USUÁRIO"
 """
 
-def search_prompt(question=None):
-    pass
+def search_prompt():
+
+    llm = ChatGoogleGenerativeAI(model=os.getenv("GOOGLE_LLM_MODEL", "gemini-2.5-flash"))
+    prompt = PromptTemplate.from_template(PROMPT_TEMPLATE)
+    return prompt | llm | StrOutputParser()

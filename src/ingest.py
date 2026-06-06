@@ -2,16 +2,8 @@ import os
 from langchain_core.documents import Document
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_postgres import PGVector
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-
 from dotenv import load_dotenv
-
-def validate_envs():
-    required_envs = ["PDF_PATH"]
-    missing_envs = [env for env in required_envs if env not in os.environ]
-    if missing_envs:
-        raise EnvironmentError(f"Variaveis de ambiente obrigatórias não definidas: {', '.join(missing_envs)}")
+from vector_store import get_vector_store, validate_envs
     
 def chunks_pdf(chunk_size=1000, chunk_overlap=150)-> list[Document]:
     PDF_PATH = os.getenv("PDF_PATH")
@@ -41,20 +33,9 @@ def enrich_documents(documents: list[Document]) -> list[Document]:
 
     return enriched_documents
 
-def embed_documents(documents: list[Document]) -> list[Document]:
+def embed_documents(documents: list[Document]):
     ids = [f"doc_{i}" for i in range(len(documents))]
-    embedding_model = GoogleGenerativeAIEmbeddings(
-        model=os.getenv("GOOGLE_EMBEDDING_MODEL"),
-        requests_per_minute=10,
-    )
-    
-    store = PGVector(
-        embeddings=embedding_model,
-        collection_name=os.getenv("PG_VECTOR_COLLECTION_NAME"),
-        connection=os.getenv("DATABASE_URL"),
-        use_jsonb=True
-    )
-
+    store = get_vector_store()
     store.add_documents(documents, ids=ids)
 
 def ingest_pdf():
